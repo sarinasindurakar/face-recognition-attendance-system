@@ -1,20 +1,67 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon Dec  6 09:02:21 2021
+Created on Fri Feb 25 13:25:05 2022
 
-@author: sarina
+@author: Nisha Poudel
 """
 
+
 import tkinter as tk
+import openpyxl,xlrd
+from openpyxl import Workbook
+from tkinter.messagebox import showinfo
+import pathlib
+
+
 import datetime 
 import time
 from PIL import Image, ImageTk
-import facedetection
+#import facedetection
    
+file= pathlib.Path("register.xlsx")
+if file.exists():
+    pass
+else:
+    file= Workbook()
+    sheet= file.active
+    sheet["A1"]= "ID"
+    sheet["B1"]= "Name"
+    sheet["C1"]= "Faculty"
+    sheet["D1"]= "Batch"
+    sheet["E1"]= "Email"
+    file.save("register.xlsx")  
+def save():
+    
+    ids= txtid.get()
+    name= txtname.get()
+    faculty= txtfaculty.get()
+    batch= txtbatch.get()
+    email= txtemail.get()
+    
+    print(ids)
+    print(name)
+    print(faculty)
+    print(batch)
+    print(email)
+    
+    file=openpyxl.load_workbook("register.xlsx")
+    sheet = file.active
+    sheet.cell(column=1,row=sheet.max_row+1,value=ids)
+    sheet.cell(column=2,row=sheet.max_row,value=name)
+    sheet.cell(column=3,row=sheet.max_row,value=faculty)
+    sheet.cell(column=4,row=sheet.max_row,value=batch)
+    sheet.cell(column=5,row=sheet.max_row,value=email)
+    file.save("register.xlsx")
+    
+    
+
+    showinfo("Saved","Your Entry has been saved")
+  
+   
+
     
 def registerme():
     window=tk.Tk()
-    
 
     def tick():
         time_string = time.strftime('%H:%M:%S')
@@ -39,13 +86,7 @@ def registerme():
           '12':'December'
           }
     def takeimage_full():
-        id = txt_id.get()
-        name = txt_name.get()
-        faculty = txt_faculty.get()
-        batch = txt_batch.get()
-        email = txt_email.get()
-        facedetection.TakeImage(id, name, faculty, batch, email);
-   
+        facedetection.TakeImage();
     #windows title
     window.title("Register.Fill the form")
     #windows stze
@@ -88,7 +129,6 @@ def registerme():
     clock.pack()
     tick()
     
-    
     #--------------------------------registration part start---------------------------------------------
     
     frame3=tk.Frame(window,width=200,height=100)
@@ -109,42 +149,44 @@ def registerme():
     
     lbl1= tk.Label(frame4, text="Enter ID",width=8  ,height=1  ,fg="black",font=('times', 17, ' bold ') )
     lbl1.place(x=140, y=55)
-    txt_id = tk.Entry(frame4,width=20,fg="black",font=('times', 15, ' bold '))
-    txt_id.place(x=280, y=55)
-    
+  
+    txtid = tk.Entry(frame4,width=20,fg="black",font=('times', 15, ' bold ' ))
+    txtid.place(x=280, y=55)
     
     lbl2= tk.Label(frame4, text="Name",width=8 ,height=1  ,fg="black",font=('times', 17, ' bold ') )
     lbl2.place(x=140, y=90)
     
-    txt_name = tk.Entry(frame4,width=20,fg="black",font=('times', 15, ' bold '))
-    txt_name.place(x=280, y=90)
-    
+    txtname = tk.Entry(frame4,width=20,fg="black",font=('times', 15, ' bold '))
+    txtname.place(x=280, y=90)
     
     lbl3= tk.Label(frame4, text="Faculty",width=8  ,height=1  ,fg="black",font=('times', 17, ' bold ') )
     lbl3.place(x=140, y=125)
-    txt_faculty = tk.Entry(frame4,width=20,fg="black",font=('times', 15, ' bold '))
-    txt_faculty.place(x=280, y=125)
+    txtfaculty = tk.Entry(frame4,width=20,fg="black",font=('times', 15, ' bold '))
+    txtfaculty.place(x=280, y=125)
     
     lbl4= tk.Label(frame4, text="Batch",width=8  ,height=1  ,fg="black",font=('times', 17, ' bold ') )
     lbl4.place(x=140, y=160)
-    txt_batch = tk.Entry(frame4,width=20,fg="black",font=('times', 15, ' bold '))
-    txt_batch.place(x=280, y=160)
+    txtbatch = tk.Entry(frame4,width=20,fg="black",font=('times', 15, ' bold '))
+    txtbatch.place(x=280, y=160)
     
     lbl5= tk.Label(frame4, text="Email",width=8  ,height=1  ,fg="black",font=('times', 17, ' bold ') )
     lbl5.place(x=140, y=195)
-    txt_email = tk.Entry(frame4,width=20,fg="black",font=('times', 15, ' bold '))
-    txt_email.place(x=280, y=195)
+    txtemail = tk.Entry(frame4,width=20,fg="black",font=('times', 15, ' bold '))
+    txtemail.place(x=280, y=195)
     
-    button_save =tk.Button(frame4, text="Take Image and Save",width="20",height="2", fg="red",command=takeimage_full)
+    button_save =tk.Button(frame4, text="Take Image",width="10",height="2", fg="red",command=takeimage_full)
     button_save.place(x=200,y=250)
     
-    """
-    
-    button_save =tk.Button(frame4, text="Save Profile", width="10",height="2",fg="red",command=saveme)
+    button_save =tk.Button(frame4, text="Save Profile", width="10",height="2",fg="red",command= save)
     button_save.place(x=300,y=250)
-    """
     
     
     
     
     window.mainloop();
+    
+    
+    
+    
+        
+        
